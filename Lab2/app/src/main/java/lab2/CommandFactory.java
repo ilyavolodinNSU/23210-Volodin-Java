@@ -1,17 +1,9 @@
 package lab2;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-enum CommandName {
-    POP,
-    PUSH,
-    PLUS,
-    MINUS,
-    MULT,
-    DIV,
-    PRINT,
-    DEFINE
-}
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 // commands interface
 interface Command {
@@ -96,39 +88,58 @@ class Define implements Command {
     }
 }
 
+class Sqrt implements Command {
+    @Override
+    public void execute(Context context) {
+        double value = context.getStack().pop();
+        context.getStack().push(Math.sqrt(value));
+    }
+}
+
 // command factory
 public class CommandFactory {
+    private final Map<String, String> commandMap = new HashMap<>();
+
+    public CommandFactory() {
+        loadConfig();
+    }
+
     public Command createCommand(String name, String... args) {
         Command command = null;
 
-        switch (name) {
-            case "POP":
-                command = new Pop();
-                break;
-            case "PUSH":
-                command = new Push(args);
-                break;
-            case "PLUS":
-                command = new Plus();
-                break;
-            case "MINUS":
-                command = new Minus();
-                break; 
-            case "MULT":
-                command = new Mult();
-                break;
-            case "DIV":
-                command = new Div();
-                break; 
-            case "PRINT":
-                command = new Print();
-                break; 
-            case "DEFINE":
-                command = new Define(args);
-                break;           
+        try {
+            String className = commandMap.get(name.toUpperCase());
+            if (className == null) {
+                throw new IllegalArgumentException("Команда не найдена: " + name);
+            }
+
+            if (args.length > 0) {
+                command = (Command) Class.forName(className).getDeclaredConstructor(String[].class).newInstance((Object) args);
+            } else {
+                command = (Command) Class.forName(className).getDeclaredConstructor().newInstance();
+            }
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Ошибка при создании команды: " + name, e);
         }
 
         return command;
+    }
+
+    private void loadConfig() {
+        try (InputStream input = CommandFactory.class.getResourceAsStream("/commands.properties")) {
+            if (input == null) {
+                throw new IllegalStateException("Файл конфигурации commands.properties не найден");
+            }
+            
+            Properties properties = new Properties();
+            properties.load(input);
+
+            for (String key : properties.stringPropertyNames()) {
+                commandMap.put(key.toUpperCase(), properties.getProperty(key));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Ошибка загрузки конфигурации", e);
+        }
     }
 }
 
