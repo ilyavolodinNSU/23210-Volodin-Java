@@ -34,9 +34,9 @@ public class App {
                 } catch (IllegalArgumentException e) {
                     logger.error("Ошибка фабрики: {}", e.getMessage());
                     System.err.println(e.getMessage());
-                } catch (Exception e) {
-                    logger.error("Неизвестная ошибка при обработке команды: {}", e.getMessage());
-                    System.err.println("Неизвестная ошибка при обработке команды: " + e.getMessage());
+                } catch (CommandException e) {
+                    logger.error("Ошибка выполнения команды {}: {}", commandName, e.getMessage());
+                    System.err.println("Ошибка выполнения команды " + commandName + ": " + e.getMessage());
                 }
             }
         } catch (FileNotFoundException e) {

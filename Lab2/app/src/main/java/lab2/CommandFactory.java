@@ -38,7 +38,7 @@ public class CommandFactory {
                 command = (Command) Class.forName(className).getDeclaredConstructor().newInstance();
             }
 
-            logger.info("Создана команда: {}", name);
+            //logger.info("Создана команда: {}", name);
         } catch (Exception e) {
             throw new IllegalArgumentException("Ошибка при создании команды: " + name, e);
         }
