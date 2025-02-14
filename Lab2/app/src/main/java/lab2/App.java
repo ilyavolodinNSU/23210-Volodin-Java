@@ -4,6 +4,8 @@ import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,6 +35,9 @@ public class App {
             CommandFactory factory = new CommandFactory("/commands.properties");
             logger.info("Фабрика и контекст созданы");
 
+            // кеширование команд для оптимизации
+            Map<String, Command> commandsCache = new HashMap<>();
+
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 if (line.startsWith("#")  || line.isEmpty()) continue;
@@ -42,7 +47,13 @@ public class App {
                 String[] commandArgs = Arrays.copyOfRange(parts, 1, parts.length);
 
                 try {
-                    Command command = factory.createCommand(commandName);
+                    Command command = commandsCache.get(commandName);
+                    
+                    if (command == null) {
+                        command = factory.createCommand(commandName);
+                        commandsCache.put(commandName, command);
+                    }
+
                     command.execute(context, commandArgs);
                     logger.info("Выполнение команды {} с аргументами {}", commandName, commandArgs.length != 0 ? Arrays.toString(commandArgs) : "");
                 } catch (IllegalArgumentException e) {
