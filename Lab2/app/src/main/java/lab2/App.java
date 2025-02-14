@@ -12,9 +12,23 @@ public class App {
     private static final Logger logger = LogManager.getLogger(App.class);
 
     public static void main(String[] args) {
+        if (args.length > 1) {
+            System.err.println("Слишком много аругментов!\nИспользуйте следующий формат для необязательных аргументов: <input file> <command config>");
+            System.exit(1);
+        }
+
         logger.info("Программа запущена");
-        try (Scanner scanner = new Scanner(new File("C:/nsu/OOP/23210-Volodin-Java/Lab2/app/src/main/resources/input.txt"))) {
-            logger.info("Загружен входной файл");
+
+        try {
+            Scanner scanner;
+            if (args.length > 0) {
+                scanner = new Scanner(new File(args[0]));
+                logger.info("Загружен входной файл");
+            } else {
+                scanner = new Scanner(System.in);
+                logger.info("Считывание команд из консоли...");
+            }
+
             Context context = new Context();
             CommandFactory factory = new CommandFactory("/commands.properties");
             logger.info("Фабрика и контекст созданы");
@@ -28,8 +42,8 @@ public class App {
                 String[] commandArgs = Arrays.copyOfRange(parts, 1, parts.length);
 
                 try {
-                    Command command = factory.createCommand(commandName, commandArgs);
-                    command.execute(context);
+                    Command command = factory.createCommand(commandName);
+                    command.execute(context, commandArgs);
                     logger.info("Выполнение команды {} с аргументами {}", commandName, commandArgs.length != 0 ? Arrays.toString(commandArgs) : "");
                 } catch (IllegalArgumentException e) {
                     logger.error("Ошибка фабрики: {}", e.getMessage());
@@ -39,6 +53,8 @@ public class App {
                     System.err.println("Ошибка выполнения команды " + commandName + ": " + e.getMessage());
                 }
             }
+
+            scanner.close();
         } catch (FileNotFoundException e) {
             logger.error(e.getMessage());
             System.err.println(e.getMessage());

@@ -24,7 +24,7 @@ public class CommandFactory {
         }
     }
 
-    public Command createCommand(String name, String... args) throws IllegalArgumentException {
+    public Command createCommand(String name) throws IllegalArgumentException {
         Command command = null;
 
         try {
@@ -32,13 +32,7 @@ public class CommandFactory {
             
             if (className == null) throw new IllegalArgumentException("Команда не найдена: " + name);
 
-            if (args.length > 0) {
-                command = (Command) Class.forName(className).getDeclaredConstructor(String[].class).newInstance((Object) args);
-            } else {
-                command = (Command) Class.forName(className).getDeclaredConstructor().newInstance();
-            }
-
-            //logger.info("Создана команда: {}", name);
+            command = (Command) Class.forName(className).getDeclaredConstructor().newInstance();
         } catch (Exception e) {
             throw new IllegalArgumentException("Ошибка при создании команды: " + name, e);
         }

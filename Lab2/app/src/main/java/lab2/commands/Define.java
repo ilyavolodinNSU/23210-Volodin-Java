@@ -8,7 +8,8 @@ public class Define implements Command {
     private String name;
     private double value;
 
-    public Define(String ...args) throws CommandException {
+    @Override
+    public void execute(Context context, String ...args) throws CommandException {
         if (args.length != 2) throw new CommandException("Аргументов должно быть два");
         try {
             this.name = args[0];
@@ -16,9 +17,7 @@ public class Define implements Command {
         } catch (NumberFormatException  e) {
             throw new CommandException("Неверный формат аргументов");
         }
-    }
 
-    public void execute(Context context) throws CommandException {
         context.getVars().put(name, value);
     }
 }

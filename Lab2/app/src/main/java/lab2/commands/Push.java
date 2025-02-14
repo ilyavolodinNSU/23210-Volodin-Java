@@ -5,15 +5,12 @@ import lab2.CommandException;
 import lab2.Context;
 
 public class Push implements Command {
-    private final String name;
-
-    public Push(String ...args) throws CommandException {
-        if (args.length != 1) throw new CommandException("Аргумент должен быть один");
-        this.name = args[0];
-    }
+    private String name;
 
     @Override
-    public void execute(Context context) throws CommandException {
+    public void execute(Context context, String ...args) throws CommandException {
+        if (args.length != 1) throw new CommandException("Команде должен передаваться 1 аргумент");
+        this.name = args[0];
         Double value = context.getVars().remove(name);
         if (value == null) throw new CommandException("Такого токена не существует");
         context.getStack().push(value);
