@@ -12,7 +12,7 @@ import org.apache.logging.log4j.Logger;
 
 public class App {
     private static final Logger logger = LogManager.getLogger(App.class);
-
+    
     public static void main(String[] args) {
         if (args.length > 1) {
             System.err.println("Слишком много аругментов!\nИспользуйте следующий формат для необязательных аргументов: <input file> <command config>");
