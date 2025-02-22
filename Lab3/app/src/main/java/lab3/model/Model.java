@@ -15,4 +15,8 @@ public class Model {
     public int getScore() {
         return this.score;
     }
+
+    public void addScore(int n) {
+        this.score += n;
+    }
 }

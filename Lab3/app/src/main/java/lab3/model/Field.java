@@ -1,5 +1,7 @@
 package lab3.model;
 
+import java.util.Arrays;
+
 // класс описывает поле и методы работы с ним
 
 public class Field {
@@ -24,12 +26,29 @@ public class Field {
         }
     }
 
+    public void resetRow(int y) {
+        Arrays.fill(matrix[y], 0);
+    }
+
     public void setCell(int x, int y, int value) {
         this.matrix[y][x] = value;
     }
 
     public int getCell(int x, int y) {
         return this.matrix[y][x];
+    }
+
+    public int[] getRow(int y) {
+        return this.matrix[y];
+    }
+
+    public void shiftRow(int y) {
+        System.arraycopy(
+            matrix[y],
+            0,
+            matrix[y + 1],
+            0,
+            this.width);
     }
 
     public int getWidth() {
