@@ -1,15 +1,22 @@
 package lab3.model;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+
 // класс описывает механики игрового процесса
 
 public class Engine {
     private Model model;
+
     private Figure currentFigure;
+    private int[][] finalFigurePosition;
+
     private EngineStatus status;
 
     public Engine() {
         this.model = new Model();
         this.currentFigure = genNewFigure();
+        this.finalFigurePosition = calcFinalPosition(this.currentFigure);
         this.status = EngineStatus.RUN;
     }
 
@@ -21,18 +28,19 @@ public class Engine {
         // добавить перерасчет финального положения
         try {
             shiftPosition(this.currentFigure.getPosition(), -1, 0);
+            this.finalFigurePosition = calcFinalPosition(this.currentFigure);
         } catch (CollisionException e) {
-            // TODO: handle exception
+            System.err.println("Коллизия");
         }
 
     }
 
-    public void moveRight(Figure figure)  {
-        // добавить перерасчет финального положения
+    public void moveRight()  {
         try {
             shiftPosition(this.currentFigure.getPosition(), 1, 0);
+            this.finalFigurePosition = calcFinalPosition(this.currentFigure);
         } catch (CollisionException e) {
-            // TODO: handle exception
+            System.err.println("Коллизия");
         }
     }
 
@@ -45,16 +53,13 @@ public class Engine {
             System.arraycopy(model.getField().getRow(i), 0, releaseModel.getField().getRow(i), 0, releaseModel.getField().getWidth());
         }
 
-        addFigure(releaseModel, finalFigurePosition());
-        addFigure(releaseModel, this.currentFigure);
+        assembleField(releaseModel, this.currentFigure, this.finalFigurePosition);
 
         return releaseModel;
     }
 
     public void update() {
-        try {
-            moveDown(this.currentFigure);
-        } catch (CollisionException e) {
+        if (Arrays.deepEquals(this.currentFigure.getPosition(), this.finalFigurePosition)) {
             addFigure(this.model, this.currentFigure);
 
             if (filled(currentFigure)) {
@@ -62,17 +67,32 @@ public class Engine {
             } else {
                 calcCompletedLines();
                 this.currentFigure = genNewFigure();
+                this.finalFigurePosition = calcFinalPosition(this.currentFigure);
             }
-        }
-    }
-    
-    // делаем фигуру элементом поля
-    private void addFigure(Model model, Figure figure) {
-        for (int[] coord : figure.getPosition()) {
-            if (coord[1] >= 0) model.getField().setCell(coord[0], coord[1], figure.getId());
+        } else {
+            moveDown(this.currentFigure);
         }
     }
 
+    // задаем значение для конткретных координат
+    private void addToField(Model model, int[][] position, int value) {
+        for (int[] coord : position) {
+            if (coord[1] >= 0) model.getField().setCell(coord[0], coord[1], value);
+        }
+    }
+    
+    // делает фигуру статичной частью поля
+    private void addFigure(Model model, Figure figure) {
+        addToField(model, figure.getPosition(), figure.getId());
+    }
+
+    // метод для рендра добавляет поле тень на поле
+    private void assembleField(Model model, Figure figure, int[][] finalPosition) {
+        addToField(model, finalPosition, -figure.getId());
+        addToField(model, figure.getPosition(), figure.getId());
+    }
+
+    // проверка на коллизии
     private boolean collision(int[][] coordinates) {
         for (int[] coord : coordinates) {
             if (coord[0] >= model.getField().getWidth() || coord[0] < 0) {
@@ -110,16 +130,19 @@ public class Engine {
         }
     }
 
-    private void moveDown(Figure figure) throws CollisionException {
-        shiftPosition(figure.getPosition(), 0, 1);
+
+    private void moveDown(Figure figure) {
+        for (int[] coord : figure.getPosition()) {
+            coord[1] += 1;
+        }
     }
 
     // расчитать корды после падения
-    private Figure finalFigurePosition() {
-        int[][] position = new int[this.currentFigure.getPosition().length][2];
+    private int[][] calcFinalPosition(Figure figure) {
+        int[][] position = new int[figure.getPosition().length][2];
 
-        for (int i = 0; i < this.currentFigure.getPosition().length; i++) {
-            System.arraycopy(this.currentFigure.getPosition()[i], 0, position[i], 0, this.currentFigure.getPosition()[i].length);
+        for (int i = 0; i < figure.getPosition().length; i++) {
+            System.arraycopy(figure.getPosition()[i], 0, position[i], 0, figure.getPosition()[i].length);
         }
 
         while (true) {
@@ -130,9 +153,7 @@ public class Engine {
             }
         }
 
-        Figure finalPosFigure = new Figure(-(this.currentFigure.getId()), position);
-
-        return finalPosFigure;
+        return position;
     }
 
     private Figure genNewFigure() {
@@ -194,25 +215,6 @@ public class Engine {
         }
         
         this.model.addScore(completedLines);
-    }
-
-
-
-
-    public void debugRenderField(Model model) {
-        for (int i = 0; i < model.getField().getHeight(); i++) {
-            for (int j = 0; j < model.getField().getWidth(); j++) {
-                System.out.print(model.getField().getCell(j, i) + " ");
-            }
-            System.out.println();
-        }
-        System.out.println("\n");
-    }
-
-    public void debugRenderFigure(Figure figure) {
-        for (int[] row : figure.getPosition()) {
-            System.out.printf("%4d %4d%n", row[0], row[1]); // Фиксировано 2 элемента в строке
-        }
     }
 
 }
