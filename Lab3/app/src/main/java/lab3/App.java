@@ -1,52 +1,25 @@
 package lab3;
 
-import javax.swing.*;
+import java.lang.reflect.Field;
+
+import javax.swing.border.Border;
 
 import lab3.model.Engine;
-import lab3.viewer.View;
-import lab3.model.EngineStatus;
+import lab3.viewer.GameView;
+import lab3.controller.Controller;
+import lab3.model.Model;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
 // фабрика тетромино
 
 public class App {
     public static void main(String[] args) {
-        Engine engine = new Engine();
-        View view = new View();
-
-        // while(engine.getStatus() == EngineStatus.RUN) {
-        //     engine.update();
-        // }
-
-        for (int i = 0; i < 105; i++) {
-            switch (i) {
-                case 0:
-                    engine.moveRight();
-                    engine.moveRight();
-                    engine.moveRight();
-                    engine.moveRight();
-                    break;
-                case 21:
-                    engine.moveRight();
-                    engine.moveRight();
-                    break;
-                case 42:
-                    engine.moveLeft();
-                    engine.moveLeft();
-                    engine.moveLeft();
-                    engine.moveLeft();
-                    break;
-                case 64:
-                    engine.moveLeft();
-                    engine.moveLeft();
-                    break;
-            }
-
-            engine.update();
-        }
-
-        view.render(engine.build());
-
-        System.out.println(engine.getStatus());
-
+        SwingUtilities.invokeLater(() -> {
+            Engine engine = new Engine();
+            GameView view = new GameView();
+            new Controller(engine, view);
+        });
     }
 }

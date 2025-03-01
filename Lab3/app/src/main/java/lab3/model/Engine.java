@@ -1,6 +1,5 @@
 package lab3.model;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
 // класс описывает механики игрового процесса
@@ -14,10 +13,7 @@ public class Engine {
     private EngineStatus status;
 
     public Engine() {
-        this.model = new Model();
-        this.currentFigure = genNewFigure();
-        this.finalFigurePosition = calcFinalPosition(this.currentFigure);
-        this.status = EngineStatus.RUN;
+        restart();
     }
 
     public EngineStatus getStatus() {
@@ -25,17 +21,19 @@ public class Engine {
     }
 
     public void moveLeft() {
-        // добавить перерасчет финального положения
+        if (this.status == EngineStatus.OVER) return;
+
         try {
             shiftPosition(this.currentFigure.getPosition(), -1, 0);
             this.finalFigurePosition = calcFinalPosition(this.currentFigure);
         } catch (CollisionException e) {
             System.err.println("Коллизия");
         }
-
     }
 
     public void moveRight()  {
+        if (this.status == EngineStatus.OVER) return;
+
         try {
             shiftPosition(this.currentFigure.getPosition(), 1, 0);
             this.finalFigurePosition = calcFinalPosition(this.currentFigure);
@@ -59,6 +57,11 @@ public class Engine {
     }
 
     public void update() {
+        if (this.status == EngineStatus.OVER) {
+            System.out.println("Game over!");
+            return;
+        }
+
         if (Arrays.deepEquals(this.currentFigure.getPosition(), this.finalFigurePosition)) {
             addFigure(this.model, this.currentFigure);
 
@@ -72,6 +75,23 @@ public class Engine {
         } else {
             moveDown(this.currentFigure);
         }
+    }
+
+    public void abort() {
+        this.status = EngineStatus.OVER;
+        System.out.println("Game over!");
+    }
+
+    public void restart() {
+        System.out.println("re");
+        this.model = new Model();
+        this.currentFigure = genNewFigure();
+        this.finalFigurePosition = calcFinalPosition(this.currentFigure);
+        this.status = EngineStatus.RUN;
+    }
+
+    public void dropFigure() {
+        this.currentFigure.setPosition(this.finalFigurePosition);
     }
 
     // задаем значение для конткретных координат
