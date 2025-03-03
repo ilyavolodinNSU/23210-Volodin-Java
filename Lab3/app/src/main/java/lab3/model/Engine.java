@@ -10,9 +10,12 @@ public class Engine {
     private Figure currentFigure;
     private int[][] finalFigurePosition;
 
+    private FiguresBag bag;
+
     private EngineStatus status;
 
     public Engine() {
+        bag = new FiguresBag("presets.json");
         restart();
     }
 
@@ -42,6 +45,26 @@ public class Engine {
         }
     }
 
+    public void rotate(boolean clockwise) {
+        for (int i = 0; i < this.currentFigure.getPosition().length; i++) {
+            int x = this.currentFigure.getPosition()[i][0];
+            int y = this.currentFigure.getPosition()[i][1];
+            this.currentFigure.getPosition()[i][0] = -y;
+            this.currentFigure.getPosition()[i][1] = x;
+        }
+        normalizePosition();
+        this.finalFigurePosition = calcFinalPosition(this.currentFigure);
+    }
+
+    private void normalizePosition() {
+        int minX = Arrays.stream(this.currentFigure.getPosition()).mapToInt(b -> b[0]).min().orElse(0);
+        int minY = Arrays.stream(this.currentFigure.getPosition()).mapToInt(b -> b[1]).min().orElse(0);
+        for (int i = 0; i < this.currentFigure.getPosition().length; i++) {
+            this.currentFigure.getPosition()[i][0] -= minX;
+            this.currentFigure.getPosition()[i][1] -= minY;
+        }
+    }
+
     // собираем модель, которая будет передаватся в view
     public Model build() {
         Model releaseModel = new Model();
@@ -57,19 +80,17 @@ public class Engine {
     }
 
     public void update() {
-        if (this.status == EngineStatus.OVER) {
-            System.out.println("Game over!");
-            return;
-        }
+        if (this.status == EngineStatus.OVER) return;
 
         if (Arrays.deepEquals(this.currentFigure.getPosition(), this.finalFigurePosition)) {
             addFigure(this.model, this.currentFigure);
 
             if (filled(currentFigure)) {
                 this.status = EngineStatus.OVER;
+                System.out.println("Game over!");
             } else {
                 calcCompletedLines();
-                this.currentFigure = genNewFigure();
+                this.currentFigure = bag.getNextFigure();
                 this.finalFigurePosition = calcFinalPosition(this.currentFigure);
             }
         } else {
@@ -83,9 +104,8 @@ public class Engine {
     }
 
     public void restart() {
-        System.out.println("re");
         this.model = new Model();
-        this.currentFigure = genNewFigure();
+        this.currentFigure = bag.getNextFigure();
         this.finalFigurePosition = calcFinalPosition(this.currentFigure);
         this.status = EngineStatus.RUN;
     }
@@ -176,22 +196,6 @@ public class Engine {
         return position;
     }
 
-    private Figure genNewFigure() {
-        // добавить расчет финального положения
-        
-        int[][] example = {
-            {5, -3},
-            {4, -2},
-            {5, -2}, // x, y
-            {4, -1},
-            {5, -1}
-        };
-
-        Figure newFigure = new Figure(9, example);
-
-        return newFigure;
-    }
-
     private boolean filled(Figure figure) {
         for (int[] coord : figure.getPosition()) {
             if (coord[1] < 0) return true;
@@ -206,15 +210,14 @@ public class Engine {
         int completedLines = 0;
 
         int[][] figurePosition = this.currentFigure.getPosition();
-        int startRow = figurePosition[0][1];
-        int finalRow = figurePosition[figurePosition.length-1][1];
 
         // перебор строк
-        for (int row = startRow; row <= finalRow; ++row) {
-            boolean lineCompleted = true;
+        for (int[] row : figurePosition) {
+            int y = row[1];
 
+            boolean lineCompleted = true;
             // обрабатываем строку
-            for (int el : this.model.getField().getRow(row)) {
+            for (int el : this.model.getField().getRow(y)) {
                 if (el == 0) {
                     lineCompleted = false;
                     break;
@@ -225,7 +228,7 @@ public class Engine {
                 completedLines++;
 
                 // все строки ниже j свдигаем вверх на 1
-                for (int j = (row-1); j > 0; --j) {
+                for (int j = (y-1); j > 0; --j) {
                     this.model.getField().shiftRow(j);
                 }
 
@@ -234,7 +237,26 @@ public class Engine {
             }
         }
         
-        this.model.addScore(completedLines);
+        this.model.addTotalLines(completedLines);
+        this.model.setLevel(calcLevel(this.model.getTotalLines()));
+        this.model.addScore(calcScore(this.model.getTotalLines(), this.model.getLevel()));
+    }
+
+    private int calcLevel(int totalLines) {
+        return totalLines/10;
+    }
+
+    private int calcScore(int totalLines, int level) {
+        int base = 0;
+
+        switch (totalLines) {
+            case 1 -> base = 40;
+            case 2 -> base = 100;
+            case 3 -> base = 300;
+            case 4 -> base = 1200;
+        }
+
+        return base*(level+1);
     }
 
 }

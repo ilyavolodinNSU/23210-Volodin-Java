@@ -6,18 +6,19 @@ import java.awt.event.*;
 
 import lab3.model.Engine;
 import lab3.model.EngineStatus;
-import lab3.viewer.GameView;
+import lab3.viewer.View;
 
 public class Controller {
     private Engine engine;
-    private GameView view;
+    private View view;
     private Timer timer;
 
-    public Controller(Engine engine, GameView view) {
+    public Controller(Engine engine, View view) {
         this.engine = engine;
         this.view = view;
 
-        view.addListener(new GameListener(this));
+        view.addMenuListener(new MenuListener(this));
+        view.addGameListener(new GameListener(this));
 
         view.showMenu();
     }
@@ -64,6 +65,16 @@ public class Controller {
 
     public void moveFigureToRight() {
         engine.moveRight();
+        view.render(engine.build());
+    }
+
+    public void rotateClockwise() {
+        engine.rotate(true);
+        view.render(engine.build());
+    }
+
+    public void rotateCounterClockwise() {
+        engine.rotate(false);
         view.render(engine.build());
     }
 

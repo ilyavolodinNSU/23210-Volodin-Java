@@ -11,17 +11,21 @@ public class GameListener extends KeyAdapter implements ActionListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_A) controller.moveFigureToLeft();
-        else if (e.getKeyCode() == KeyEvent.VK_D) controller.moveFigureToRight();
-        else if (e.getKeyCode() == KeyEvent.VK_SPACE) controller.dropFigure();
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_A -> controller.moveFigureToLeft();
+            case KeyEvent.VK_D -> controller.moveFigureToRight();
+            case KeyEvent.VK_W -> controller.rotateClockwise();
+            case KeyEvent.VK_S -> controller.rotateCounterClockwise();
+            case KeyEvent.VK_SPACE -> controller.dropFigure();
+        }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equals("back")) controller.endGame();
-        else if (e.getActionCommand().equals("restart")) controller.restartGame();
-        else if (e.getActionCommand().equals("start")) controller.startGame();
-        else if (e.getActionCommand().equals("table")) controller.exitGame();
-        else if (e.getActionCommand().equals("exit")) controller.exitGame();
+        switch (e.getActionCommand()) {
+            case "restart" -> controller.restartGame();  
+            case "back" -> controller.endGame();
+                
+        }
     }
 }
