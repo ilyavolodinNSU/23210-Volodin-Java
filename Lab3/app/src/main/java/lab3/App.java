@@ -1,16 +1,9 @@
 package lab3;
 
-import java.lang.reflect.Field;
-
-import javax.swing.border.Border;
-
 import lab3.model.Engine;
 import lab3.viewer.View;
 import lab3.controller.Controller;
-import lab3.model.Model;
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
 
 /* Задачи
 3) таблица рекордов 1

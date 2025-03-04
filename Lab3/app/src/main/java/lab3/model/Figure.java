@@ -35,14 +35,15 @@ public class Figure implements Cloneable {
         return new Figure(this.id, deepCopy(this.position));
     }
 
-    private static int[][] deepCopy(int[][] array) {
-        int[][] copy = new int[array.length][];
+    private static int[][] deepCopy(int[][] original) {
+        int[][] deepCopy = new int[original.length][];
 
-        for (int i = 0; i < array.length; i++) {
-            copy[i] = array[i].clone();
+        for (int i = 0; i < original.length; i++) {
+            deepCopy[i] = new int[original[i].length];
+            System.arraycopy(original[i], 0, deepCopy[i], 0, original[i].length);
         }
         
-        return copy;
+        return deepCopy;
     }
 
 }
