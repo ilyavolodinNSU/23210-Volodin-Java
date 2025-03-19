@@ -1,6 +1,6 @@
 package lab3.viewer;
 
-import lab3.model.Model;
+import lab3.Data;
 import lab3.controller.GameListener;
 import lab3.controller.MenuListener;
 
@@ -19,13 +19,21 @@ public class View {
     public View() {
         frame = new JFrame("TETRIS");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setResizable(false);
-        frame.setLocationRelativeTo(null);
-        //frame.setUndecorated(true);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setUndecorated(true);
+        frame.getContentPane().setBackground(new Color(20, 20, 30));
+
+        // центрируем
+        frame.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.CENTER;
         
         cardContainer = new JPanel();
         cardLayout = new CardLayout();
         cardContainer.setLayout(cardLayout);
+        cardContainer.setOpaque(false);
 
         // меню
         menuPanel = new MenuView();
@@ -37,29 +45,27 @@ public class View {
         cardContainer.add(menuPanel, "Меню");
         cardContainer.add(gamePanel, "Игра");
 
-        // фрейм
-        frame.add(cardContainer);
-        frame.pack();
+        frame.add(cardContainer, gbc);
         frame.setVisible(true);
         frame.setFocusable(true);
         frame.requestFocusInWindow();
-
-        showMenu();
     }
 
     public void showMenu() {
         cardLayout.show(cardContainer, "Меню");
-        frame.pack();
-        //frame.requestFocusInWindow();
+        frame.revalidate();
+        frame.repaint();
     }
 
     public void showGame() {
         cardLayout.show(cardContainer, "Игра");
-        frame.pack();
+        frame.revalidate();
+        frame.repaint();
         frame.requestFocusInWindow();
     }
 
     public void addMenuListener(MenuListener listener) {
+        frame.addKeyListener(listener);
         menuPanel.addListener(listener);
     }
 
@@ -72,8 +78,8 @@ public class View {
         frame.dispose();
     }
 
-    public void render(Model model) {
-        gamePanel.render(model);
+    public void render(Data data) {
+        gamePanel.render(data);
         frame.revalidate();
         frame.repaint();
     }

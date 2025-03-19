@@ -1,8 +1,6 @@
 package lab3.controller;
 
 import javax.swing.Timer;
-import java.awt.*;
-import java.awt.event.*;
 
 import lab3.model.Engine;
 import lab3.model.EngineStatus;
@@ -59,28 +57,28 @@ public class Controller {
     }
 
     public void moveFigureToLeft() {
-        engine.moveLeft();
+        engine.moveShapeLeft();
         view.render(engine.build());
     }
 
     public void moveFigureToRight() {
-        engine.moveRight();
+        engine.moveShapeRight();
         view.render(engine.build());
     }
 
     public void rotateClockwise() {
-        engine.rotate(true);
+        engine.rotateShape(true);
         view.render(engine.build());
     }
 
     public void rotateCounterClockwise() {
-        engine.rotate(false);
+        engine.rotateShape(false);
         view.render(engine.build());
     }
 
     public void dropFigure() {
         timer.restart();
-        engine.dropFigure();
+        engine.dropShape();
         engine.update();
         view.render(engine.build());
     }

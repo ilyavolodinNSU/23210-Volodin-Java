@@ -1,13 +1,13 @@
 package lab3.model;
 
 public class TetrisShapes {
-    private java.util.Map<String, Figure> shapes;
+    private java.util.Map<String, Shape> shapes;
 
-    public java.util.Map<String, Figure> getShapes() {
+    public java.util.Map<String, Shape> getShapes() {
         return this.shapes;
     }
 
-    public Figure getShape(String name) {
+    public Shape getShape(String name) {
         return this.shapes.get(name);
     }
     

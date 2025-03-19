@@ -1,11 +1,7 @@
 package lab3.viewer;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-
-import javax.swing.JButton;
-import javax.swing.JPanel;
+import java.awt.*;
+import javax.swing.*;
 
 import lab3.controller.MenuListener;
 
@@ -14,18 +10,42 @@ public class MenuView extends JPanel {
     private JButton newGameButton;
 
     public MenuView() {
-        setLayout(new FlowLayout());
-        setBackground(Color.BLACK);
-        newGameButton = new JButton("Новая игра");
+        setBackground(new Color(20, 20, 30));
+        setPreferredSize(new Dimension(400, 500));
+        setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        JLabel title = new JLabel("TETRIS");
+        title.setFont(new Font("SansSerif", Font.BOLD, 48));
+        title.setForeground(new Color(0, 150, 136));
+
+        newGameButton = createStyledButton("Новая игра", new Color(0, 150, 136));
         newGameButton.setActionCommand("start");
-        JButton scoreTableButton = new JButton("Счёт");
-        scoreTableButton.setActionCommand("table");
-        exitGameButton = new JButton("Выйти");
+
+        exitGameButton = createStyledButton("Выйти", new Color(239, 83, 80));
         exitGameButton.setActionCommand("exit");
-        add(newGameButton);
-        add(scoreTableButton);
-        add(exitGameButton);
-        setPreferredSize(new Dimension(300, 400));
+
+        gbc.insets = new Insets(20, 20, 20, 20);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        add(title, gbc);
+
+        gbc.gridy = 1;
+        add(newGameButton, gbc);
+
+        gbc.gridy = 2;
+        add(exitGameButton, gbc);
+    }
+
+    private JButton createStyledButton(String text, Color color) {
+        JButton button = new JButton(text);
+        button.setFont(new Font("SansSerif", Font.BOLD, 18));
+        button.setBackground(color);
+        button.setForeground(Color.WHITE);
+        button.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 30));
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        button.setFocusPainted(false);
+        return button;
     }
 
     public void addListener(MenuListener listener) {

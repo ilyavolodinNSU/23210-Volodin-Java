@@ -13,8 +13,14 @@ public class MenuListener extends KeyAdapter implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "start" -> controller.startGame();
-            case "table" -> controller.exitGame();
             case "exit" -> controller.exitGame();
+        }
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_ESCAPE -> controller.exitGame();
         }
     }
 }

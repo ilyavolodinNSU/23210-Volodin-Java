@@ -17,6 +17,7 @@ public class GameListener extends KeyAdapter implements ActionListener {
             case KeyEvent.VK_W -> controller.rotateClockwise();
             case KeyEvent.VK_S -> controller.rotateCounterClockwise();
             case KeyEvent.VK_SPACE -> controller.dropFigure();
+            case KeyEvent.VK_ESCAPE -> controller.endGame();
         }
     }
 

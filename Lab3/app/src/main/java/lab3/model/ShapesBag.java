@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-public class FiguresBag {
-    private ArrayList<Figure> bag;
+public class ShapesBag {
+    private ArrayList<Shape> bag;
     private Random random;
     private TetrisShapes shapes;
 
-    public FiguresBag(String presetsPath) {
+    public ShapesBag(String presetsPath) {
         this.shapes = ShapeLoader.loadShapes(presetsPath);
         this.random = new Random();
         this.bag = new ArrayList<>();
@@ -22,12 +22,12 @@ public class FiguresBag {
         Collections.shuffle(bag, random);
     }
 
-    public Figure getNextFigure() {
+    public Shape getNextFigure() {
         if (bag.isEmpty()) {
             refillBag();
         }
 
-        Figure copyFigure = bag.remove(bag.size()-1).clone();
+        Shape copyFigure = bag.remove(bag.size()-1).clone();
 
         return copyFigure;
     }

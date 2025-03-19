@@ -1,10 +1,10 @@
 package lab3.model;
 
-public class Figure implements Cloneable {
+public class Shape implements Cloneable {
     private int[][] position; // описывает форму фигуры (y строго должны быть по возрастанию)
     private int id;
 
-    public Figure(int id, int[][] coordinates) {
+    public Shape(int id, int[][] coordinates) {
         this.id = id;
         this.position = coordinates;
     }
@@ -31,8 +31,8 @@ public class Figure implements Cloneable {
     }
 
     @Override
-    protected Figure clone() {
-        return new Figure(this.id, deepCopy(this.position));
+    protected Shape clone() {
+        return new Shape(this.id, deepCopy(this.position));
     }
 
     private static int[][] deepCopy(int[][] original) {

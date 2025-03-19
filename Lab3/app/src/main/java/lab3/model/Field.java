@@ -18,6 +18,10 @@ public class Field {
         this.matrix = new int[this.height][this.width];
     }
 
+    public int[][] getMatrix() {
+        return this.matrix;
+    }
+
     public void reset() {
         for (int i = 0; i < this.height; i++) {
             for (int j = 0; j < this.width; j++) {
