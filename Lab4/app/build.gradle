@@ -13,6 +13,10 @@ plugins {
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
+
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 dependencies {
@@ -24,11 +28,17 @@ dependencies {
     // This dependency is used by the application.
     implementation libs.guava
 
-    // orm
-    implementation 'org.hibernate:hibernate-gradle-plugin:5.6.15.Final'
+    implementation 'org.hibernate:hibernate-core:6.6.11.Final'
+    implementation files('lib/mysql-connector-j-9.1.0.jar');
 
-    // db
-    implementation 'org.xerial:sqlite-jdbc:3.7.2'
+
+    implementation 'mysql:mysql-connector-j:8.0.41'
+
+    compileOnly 'org.projectlombok:lombok:1.18.36'
+	annotationProcessor 'org.projectlombok:lombok:1.18.36'
+	
+	testCompileOnly 'org.projectlombok:lombok:1.18.36'
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.36'
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
