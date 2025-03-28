@@ -1,4 +1,4 @@
-package factory.infrastructure.db.repositories;
+package factory.infrastructure.db.repositories.storage;
 
 import factory.core.entities.parts.Accessory;
 import factory.core.repository.IAccessoryRepository;

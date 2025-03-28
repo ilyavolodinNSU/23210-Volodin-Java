@@ -21,7 +21,7 @@ public class CarData {
     private int bodyId;
 
     @Column(name = "motor_id")
-    private int motorid;
+    private int motorId;
 
     @Column(name = "accessory_id")
     private int accessoryId;

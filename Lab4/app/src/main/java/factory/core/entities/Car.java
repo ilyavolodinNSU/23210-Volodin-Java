@@ -17,7 +17,26 @@ public class Car {
         this.id = id;
     }
 
+    public int getId() {
+        return this.id;
+    }
+
+    public Motor getMotor() {
+        return this.motor;
+    }
+
+    public Body getBody() {
+        return this.body;
+    }
+
+    public Accessory getAccessory() {
+        return this.accessory;
+    }
+
     public void print() {
-        System.out.println("Car " + id);
+        System.out.println("Car ID: " + id);
+        System.out.println("Motor ID: " + motor.getId());
+        System.out.println("Body ID: " + body.getId());
+        System.out.println("Accessory ID: " + accessory.getId());
     }
 }

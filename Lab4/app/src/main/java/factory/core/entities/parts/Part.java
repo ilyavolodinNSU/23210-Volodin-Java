@@ -1,6 +1,6 @@
 package factory.core.entities.parts;
 
-public class Part {
+public abstract class Part {
     private final int id;
     
     public Part(int id) {

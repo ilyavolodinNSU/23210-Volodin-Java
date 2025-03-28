@@ -20,6 +20,6 @@ public class MotorServices {
     }
 
     public Motor supply() {
-        return new Motor(0);
+        return new Motor(52);
     }
 }
