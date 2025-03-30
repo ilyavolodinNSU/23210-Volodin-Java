@@ -18,7 +18,7 @@ public class BodyRepositoryMySQL implements IBodyRepository {
     }
 
     @Override
-    public void push(Body Body) {
+    public synchronized void push(Body Body) {
         BodyData BodyDto = BodyMapper.INSTANCE.toDto(Body);
 
         try (Session session = this.sessionFactory.openSession()) {
@@ -35,7 +35,7 @@ public class BodyRepositoryMySQL implements IBodyRepository {
     }
 
     @Override
-    public Body pop() {
+    public synchronized Body pop() {
         Body Body = null;
 
         try (Session session = this.sessionFactory.openSession()) {

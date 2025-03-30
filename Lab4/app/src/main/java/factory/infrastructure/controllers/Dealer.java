@@ -2,7 +2,7 @@ package factory.infrastructure.controllers;
 
 import factory.core.services.CarServices;
 
-public class Dealer {
+public class Dealer implements Runnable {
     private final CarServices carServices;
 
     public Dealer(CarServices carServices) {
@@ -10,6 +10,8 @@ public class Dealer {
     }
 
     // берет машину без репозитория, продает
+
+    @Override
     public void run() {
         carServices.saleCar(carServices.retrieve());
     }

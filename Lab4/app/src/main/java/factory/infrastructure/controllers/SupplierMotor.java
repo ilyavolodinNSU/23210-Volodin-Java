@@ -2,7 +2,7 @@ package factory.infrastructure.controllers;
 
 import factory.core.services.MotorServices;
 
-public class SupplierMotor {
+public class SupplierMotor implements Runnable {
     private final MotorServices motorService;
 
     public SupplierMotor(MotorServices motorService) {
@@ -10,6 +10,8 @@ public class SupplierMotor {
     }
 
     // создает часть и пушит и репозиторий
+
+    @Override
     public void run() {
         motorService.store(motorService.supply());
     }

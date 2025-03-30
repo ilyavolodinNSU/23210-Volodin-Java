@@ -5,7 +5,7 @@ import factory.core.services.BodyServices;
 import factory.core.services.CarServices;
 import factory.core.services.MotorServices;
 
-public class Worker {
+public class Worker implements Runnable {
     private final MotorServices motorService;
     private final BodyServices bodyServices;
     private final AccessoryServices accessoryServices;
@@ -19,6 +19,8 @@ public class Worker {
     }
 
     // берет части из репозиториев, собирает машину, пушит машину в репозиторий
+
+    @Override
     public void run() {
         carServices.store(
             carServices.assembleCar(motorService.retrieve(),

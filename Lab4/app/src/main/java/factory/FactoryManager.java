@@ -1,6 +1,7 @@
 package factory;
 
-import factory.core.entities.parts.Motor;
+import java.util.concurrent.locks.ReentrantLock;
+
 import factory.core.services.AccessoryServices;
 import factory.core.services.BodyServices;
 import factory.core.services.CarServices;
@@ -30,16 +31,23 @@ public class FactoryManager {
         AccessoryServices accessoryServices = new AccessoryServices(accessoryRepositoryMySQL);
         CarServices carServices = new CarServices(carRepMySQL);
 
-        SupplierMotor supplierMotor = new SupplierMotor(motorServices);
-        SupplierBody supplierBody = new SupplierBody(bodyServices);
-        SupplierAccessory supplierAccessory = new SupplierAccessory(accessoryServices);
-        Dealer dealer = new Dealer(carServices);
-        Worker worker = new Worker(motorServices, bodyServices, accessoryServices, carServices);
+        SupplierMotor supplierMotor1 = new SupplierMotor(motorServices);
+        SupplierMotor supplierMotor2 = new SupplierMotor(motorServices);
+        SupplierMotor supplierMotor3 = new SupplierMotor(motorServices);
+        // SupplierBody supplierBody = new SupplierBody(bodyServices);
+        // SupplierAccessory supplierAccessory = new SupplierAccessory(accessoryServices);
+        // Dealer dealer = new Dealer(carServices);
+        // Worker worker = new Worker(motorServices, bodyServices, accessoryServices, carServices);
 
-        supplierMotor.run();
-        supplierBody.run();
-        supplierAccessory.run();
-        worker.run();
-        dealer.run();
+        ReentrantLock locker = new ReentrantLock();
+
+        Thread t1 = new Thread(supplierMotor1);
+        Thread t2 = new Thread(supplierMotor2);
+        Thread t3 = new Thread(supplierMotor3);
+
+        t1.start();
+        t2.start();
+        t3.start();
+
     }
 }

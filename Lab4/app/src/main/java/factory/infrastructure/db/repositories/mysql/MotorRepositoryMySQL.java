@@ -18,7 +18,36 @@ public class MotorRepositoryMySQL implements IMotorRepository {
     }
 
     @Override
-    public void push(Motor motor) {
+    public synchronized long getSize() {
+        long size = 0;
+
+        try (Session session = this.sessionFactory.openSession()) {
+            Transaction transition = session.beginTransaction();
+
+            try {
+                size = session.createQuery("SELECT COUNT(*) FROM MotorData", Long.class).getSingleResult();
+                transition.commit();
+            } catch (Exception e) {
+                transition.rollback();
+                e.printStackTrace();
+            }
+        }
+
+        return size;
+    }
+
+    @Override
+    public synchronized void push(Motor motor) {
+        if (getSize() >= 3) {
+            try {
+                System.err.println("Склад моторов переполнен");
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // добавление данных
         MotorData motorDto = MotorMapper.INSTANCE.toDto(motor);
 
         try (Session session = this.sessionFactory.openSession()) {
@@ -32,10 +61,23 @@ public class MotorRepositoryMySQL implements IMotorRepository {
                 e.printStackTrace();
             }
         }
+
+        // запускаем потоки, которые выполняли pop()
+        notify();
     }
 
     @Override
-    public Motor pop() {
+    public synchronized Motor pop() {
+        if (getSize() <= 0) {
+            try {
+                System.err.println("Склад моторов пуст");
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // достаем данные
         Motor motor = null;
 
         try (Session session = this.sessionFactory.openSession()) {
@@ -53,6 +95,9 @@ public class MotorRepositoryMySQL implements IMotorRepository {
                 e.printStackTrace();
             }
         }
+
+        // воскрешаем потоки, которые выполняли push()
+        if (motor != null) notify();
 
         return motor;
     }

@@ -1,6 +1,8 @@
-// package factory.core.repository;
+package factory.core.repository;
 
-// public interface Repository<T> {
-//     public void push(T entity);
-//     public T pop();
-// }
+import factory.core.entities.parts.Part;
+
+public interface Repository<T> {
+    public void push(T entity);
+    public T pop();
+}

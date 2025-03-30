@@ -18,7 +18,7 @@ public class CarRepositoryMySQL implements ICarRepository {
     }
 
     @Override
-    public void push(Car Car) {
+    public synchronized void push(Car Car) {
         CarData CarDto = CarMapper.INSTANCE.toDto(Car);
 
         try (Session session = this.sessionFactory.openSession()) {
@@ -35,7 +35,7 @@ public class CarRepositoryMySQL implements ICarRepository {
     }
 
     @Override
-    public Car pop() {
+    public synchronized Car pop() {
         Car Car = null;
 
         try (Session session = this.sessionFactory.openSession()) {

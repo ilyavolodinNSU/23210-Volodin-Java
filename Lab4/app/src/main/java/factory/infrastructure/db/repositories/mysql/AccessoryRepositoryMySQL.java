@@ -18,7 +18,7 @@ public class AccessoryRepositoryMySQL implements IAccessoryRepository {
     }
 
     @Override
-    public void push(Accessory Accessory) {
+    public synchronized void push(Accessory Accessory) {
         AccessoryData AccessoryDto = AccessoryMapper.INSTANCE.toDto(Accessory);
 
         try (Session session = this.sessionFactory.openSession()) {
@@ -35,7 +35,7 @@ public class AccessoryRepositoryMySQL implements IAccessoryRepository {
     }
 
     @Override
-    public Accessory pop() {
+    public synchronized Accessory pop() {
         Accessory Accessory = null;
 
         try (Session session = this.sessionFactory.openSession()) {
