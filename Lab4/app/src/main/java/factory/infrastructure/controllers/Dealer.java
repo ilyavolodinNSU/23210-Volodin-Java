@@ -1,18 +1,39 @@
 package factory.infrastructure.controllers;
 
-import factory.core.services.CarServices;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 
+import factory.core.entities.Car;
+import factory.core.services.CarServices;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public class Dealer implements Runnable {
     private final CarServices carServices;
-
-    public Dealer(CarServices carServices) {
-        this.carServices = carServices;
-    }
+    private final CarRepoController repoController;
 
     // берет машину без репозитория, продает
 
     @Override
     public void run() {
-        carServices.saleCar(carServices.retrieve());
+        while (true) {
+            try {
+                Thread.sleep(5000);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            System.out.println("⏳ D: init");
+
+            repoController.signal();
+
+            Car car = carServices.retrieve();
+
+            System.out.println(Thread.currentThread().getName() + " машина получена со склада");
+
+            carServices.saleCar(car);
+
+            System.out.println("D: машина продана");
+        }
     }
 }

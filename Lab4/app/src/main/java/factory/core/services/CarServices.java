@@ -4,13 +4,15 @@ import factory.core.entities.Car;
 import factory.core.entities.parts.Accessory;
 import factory.core.entities.parts.Body;
 import factory.core.entities.parts.Motor;
-import factory.core.repository.ICarRepository;
+import factory.core.repository.Repository;
 
 public class CarServices {
-    private ICarRepository repository;
+    private final Repository<Car> repository;
+    //private final IdGenerator idGen;
 
-    public CarServices(ICarRepository repository) {
+    public CarServices(Repository<Car> repository) {
         this.repository = repository;
+        //this.idGen = new IdGenerator();
     }
 
     public void store(Car car) {
@@ -22,8 +24,8 @@ public class CarServices {
         return entity;
     }
 
-    public Car assembleCar(Motor motor, Body body, Accessory accessory) {
-        return new Car(body, motor, accessory, CarIdGenerator.generateId());
+    public Car assembleCar(Motor motor, Body body, Accessory accessory, int id) {
+        return new Car(body, motor, accessory, id);
     }
 
     public void saleCar(Car car) {

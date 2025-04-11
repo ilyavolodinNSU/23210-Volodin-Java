@@ -6,15 +6,34 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import factory.core.entities.parts.Body;
-import factory.core.repository.IBodyRepository;
+import factory.core.repository.Repository;
 import factory.infrastructure.db.entities.BodyData;
 import factory.infrastructure.db.mapper.BodyMapper;
 
-public class BodyRepositoryMySQL implements IBodyRepository {
+public class BodyRepositoryMySQL implements Repository<Body> {
     private SessionFactory sessionFactory;
 
     public BodyRepositoryMySQL(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
+    }
+
+    @Override
+    public long size() {
+        long size = 0;
+
+        try (Session session = this.sessionFactory.openSession()) {
+            Transaction transition = session.beginTransaction();
+
+            try {
+                size = session.createQuery("SELECT COUNT(*) FROM BodyData", Long.class).getSingleResult();
+                transition.commit();
+            } catch (Exception e) {
+                transition.rollback();
+                e.printStackTrace();
+            }
+        }
+
+        return size;
     }
 
     @Override

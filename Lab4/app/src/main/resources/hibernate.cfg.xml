@@ -15,7 +15,7 @@
         <property name="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</property>
 
         <!-- Логирование SQL-запросов -->
-        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.show_sql">flase</property>
         <property name="hibernate.format_sql">true</property>
 
         <!-- Отключение второго уровня кеширования (если не используется) -->

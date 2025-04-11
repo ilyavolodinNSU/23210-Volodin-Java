@@ -6,15 +6,34 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import factory.core.entities.parts.Accessory;
-import factory.core.repository.IAccessoryRepository;
+import factory.core.repository.Repository;
 import factory.infrastructure.db.entities.AccessoryData;
 import factory.infrastructure.db.mapper.AccessoryMapper;
 
-public class AccessoryRepositoryMySQL implements IAccessoryRepository {
+public class AccessoryRepositoryMySQL implements Repository<Accessory> {
     private SessionFactory sessionFactory;
 
     public AccessoryRepositoryMySQL(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
+    }
+
+    @Override
+    public long size() {
+        long size = 0;
+
+        try (Session session = this.sessionFactory.openSession()) {
+            Transaction transition = session.beginTransaction();
+
+            try {
+                size = session.createQuery("SELECT COUNT(*) FROM AccessoryData", Long.class).getSingleResult();
+                transition.commit();
+            } catch (Exception e) {
+                transition.rollback();
+                e.printStackTrace();
+            }
+        }
+
+        return size;
     }
 
     @Override

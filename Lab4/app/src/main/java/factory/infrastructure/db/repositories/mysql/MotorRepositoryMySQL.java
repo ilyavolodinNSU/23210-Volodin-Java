@@ -6,11 +6,11 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import factory.core.entities.parts.Motor;
-import factory.core.repository.IMotorRepository;
+import factory.core.repository.Repository;
 import factory.infrastructure.db.entities.MotorData;
 import factory.infrastructure.db.mapper.MotorMapper;
 
-public class MotorRepositoryMySQL implements IMotorRepository {
+public class MotorRepositoryMySQL implements Repository<Motor> {
     private SessionFactory sessionFactory;
 
     public MotorRepositoryMySQL(SessionFactory sessionFactory) {
@@ -18,7 +18,7 @@ public class MotorRepositoryMySQL implements IMotorRepository {
     }
 
     @Override
-    public synchronized long getSize() {
+    public long size() {
         long size = 0;
 
         try (Session session = this.sessionFactory.openSession()) {
@@ -37,16 +37,7 @@ public class MotorRepositoryMySQL implements IMotorRepository {
     }
 
     @Override
-    public synchronized void push(Motor motor) {
-        if (getSize() >= 3) {
-            try {
-                System.err.println("Склад моторов переполнен");
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
+    public void push(Motor motor) {
         // добавление данных
         MotorData motorDto = MotorMapper.INSTANCE.toDto(motor);
 
@@ -61,22 +52,10 @@ public class MotorRepositoryMySQL implements IMotorRepository {
                 e.printStackTrace();
             }
         }
-
-        // запускаем потоки, которые выполняли pop()
-        notify();
     }
 
     @Override
-    public synchronized Motor pop() {
-        if (getSize() <= 0) {
-            try {
-                System.err.println("Склад моторов пуст");
-                wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
+    public Motor pop() {
         // достаем данные
         Motor motor = null;
 
@@ -95,9 +74,6 @@ public class MotorRepositoryMySQL implements IMotorRepository {
                 e.printStackTrace();
             }
         }
-
-        // воскрешаем потоки, которые выполняли push()
-        if (motor != null) notify();
 
         return motor;
     }
