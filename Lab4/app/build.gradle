@@ -52,7 +52,7 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = 'factory.FactoryManager'
+    mainClass = 'factory.Factory'
 }
 
 tasks.named('test') {

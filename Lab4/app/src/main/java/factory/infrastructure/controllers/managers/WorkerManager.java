@@ -1,4 +1,4 @@
-package factory.infrastructure.controllers;
+package factory.infrastructure.controllers.managers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,17 +6,17 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.glassfish.jaxb.runtime.v2.runtime.reflect.Accessor;
-
+import factory.GUI.MainFrame;
 import factory.core.entities.parts.Accessory;
 import factory.core.entities.parts.Body;
 import factory.core.entities.parts.Motor;
 import factory.core.services.CarServices;
 import factory.core.services.PartServices;
+import factory.infrastructure.FactoryState;
+import factory.infrastructure.controllers.Worker;
+import factory.infrastructure.controllers.repository.PartsRepoMonitor;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -27,7 +27,8 @@ public class WorkerManager implements Runnable {
     private final PartServices<Body> bodyServices;
     private final PartServices<Accessory> accessoryServices;
     private final CarServices carServices;
-    private final AtomicInteger activeTasksCounter;
+    private final FactoryState factoryState;
+    private final PartsRepoMonitor partsRepoMonitor;
 
     @Override
     public void run() {
@@ -36,27 +37,30 @@ public class WorkerManager implements Runnable {
 
         while (true) {
             try {
-                // System.out.println("WM: ожидаем задачу...");
                 int order = tasksQueue.take();
-                System.out.println("❗ WM: задача: создать " + order + " машин");
 
                 if (order == -1) break;
 
                 for (int i = 0; i < order; ++i) {
-                    workers.add(new Worker(motorService, bodyServices, accessoryServices, carServices));
+                    workers.add(new Worker(
+                        motorService,
+                        bodyServices, 
+                        accessoryServices,
+                        carServices,
+                        factoryState,
+                        partsRepoMonitor
+                    ));
                 }
 
                 pool.invokeAll(workers);
 
                 workers.clear();
 
-                activeTasksCounter.addAndGet(-order);
+                factoryState.getActiveTasksCounter().addAndGet(-order);
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-
-        // System.out.println("завершение работы WM");
     }
 }

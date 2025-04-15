@@ -4,4 +4,5 @@ public interface Repository<T> {
     public void push(T entity);
     public T pop();
     public long size();
+    public long getCapacity();
 }

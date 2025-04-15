@@ -9,13 +9,15 @@ import factory.core.entities.parts.Body;
 import factory.core.repository.Repository;
 import factory.infrastructure.db.entities.BodyData;
 import factory.infrastructure.db.mapper.BodyMapper;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+@AllArgsConstructor
 public class BodyRepositoryMySQL implements Repository<Body> {
     private SessionFactory sessionFactory;
-
-    public BodyRepositoryMySQL(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+    @Getter
+    private final long capacity;
 
     @Override
     public long size() {

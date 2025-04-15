@@ -1,4 +1,4 @@
-package factory.infrastructure;
+package factory.infrastructure.db.repositories;
 
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
@@ -7,7 +7,6 @@ import factory.core.repository.Repository;
 
 public class SyncRepository<T> implements Repository<T> {
     private final Repository<T> repository;
-    //private final int capacity;
 
     private final ReentrantLock lock = new ReentrantLock();
     private final Condition notFull = lock.newCondition();
@@ -30,7 +29,7 @@ public class SyncRepository<T> implements Repository<T> {
     public void push(T item) {
         lock.lock();
         try {
-            while (repository.size() >= 10) {
+            while (repository.size() >= repository.getCapacity()) {
                 notFull.await();
             }
             repository.push(item);
@@ -59,6 +58,11 @@ public class SyncRepository<T> implements Repository<T> {
         }
 
         return item;
+    }
+
+    @Override
+    public long getCapacity() {
+        return repository.getCapacity();
     }
 
     public void notFullSignalAll() {

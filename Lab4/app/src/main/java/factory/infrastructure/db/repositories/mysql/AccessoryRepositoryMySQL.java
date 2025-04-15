@@ -9,13 +9,15 @@ import factory.core.entities.parts.Accessory;
 import factory.core.repository.Repository;
 import factory.infrastructure.db.entities.AccessoryData;
 import factory.infrastructure.db.mapper.AccessoryMapper;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+@AllArgsConstructor
 public class AccessoryRepositoryMySQL implements Repository<Accessory> {
     private SessionFactory sessionFactory;
-
-    public AccessoryRepositoryMySQL(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+    @Getter
+    private final long capacity;
 
     @Override
     public long size() {

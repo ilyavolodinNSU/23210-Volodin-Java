@@ -9,13 +9,16 @@ import factory.core.entities.parts.Motor;
 import factory.core.repository.Repository;
 import factory.infrastructure.db.entities.MotorData;
 import factory.infrastructure.db.mapper.MotorMapper;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+
+@AllArgsConstructor
 public class MotorRepositoryMySQL implements Repository<Motor> {
     private SessionFactory sessionFactory;
-
-    public MotorRepositoryMySQL(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+    @Getter
+    private final long capacity;
 
     @Override
     public long size() {

@@ -8,13 +8,15 @@ import factory.core.entities.Car;
 import factory.core.repository.Repository;
 import factory.infrastructure.db.entities.CarData;
 import factory.infrastructure.db.mapper.CarMapper;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+@AllArgsConstructor
 public class CarRepositoryMySQL implements Repository<Car> {
     private SessionFactory sessionFactory;
-
-    public CarRepositoryMySQL(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+    @Getter
+    private final long capacity;
 
     @Override
     public long size() {
