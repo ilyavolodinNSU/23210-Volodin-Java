@@ -31,7 +31,7 @@ public class Shape implements Cloneable {
     }
 
     @Override
-    protected Shape clone() {
+    public Shape clone() {
         return new Shape(this.id, deepCopy(this.position));
     }
 
