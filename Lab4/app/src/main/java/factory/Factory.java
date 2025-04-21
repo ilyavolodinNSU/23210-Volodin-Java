@@ -2,7 +2,6 @@ package factory;
 
 import java.util.Timer;
 import java.util.TimerTask;
-
 import factory.GUI.MainFrame;
 import factory.infrastructure.FactoryManager;
 
@@ -11,7 +10,7 @@ public class Factory {
         FactoryManager factory = new FactoryManager("app/src/main/resources/config.properties");
         factory.start();
 
-        MainFrame gui = new MainFrame();
+        MainFrame gui = new MainFrame(factory); // Передаем factory в MainFrame
 
         Timer timer = new Timer();
 

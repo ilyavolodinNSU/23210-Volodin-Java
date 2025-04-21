@@ -4,11 +4,12 @@ import factory.core.entities.parts.Accessory;
 import factory.core.entities.parts.Body;
 import factory.core.entities.parts.Motor;
 
+
 public class Car {
-    private final Body body;
-    private final Motor motor;
-    private final Accessory accessory;
-    private final int id;
+    private Body body;
+    private Motor motor;
+    private Accessory accessory;
+    private int id;
 
     public Car(Body body, Motor motor, Accessory accessory, int id) {
         this.body = body;
@@ -31,6 +32,22 @@ public class Car {
 
     public Accessory getAccessory() {
         return this.accessory;
+    }
+
+    public void setMotor(Motor motor) {
+        this.motor = motor;
+    }
+
+    public void setBody(Body body) {
+        this.body = body;
+    }
+
+    public void setAccessory(Accessory accessory) {
+        this.accessory = accessory;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void print() {

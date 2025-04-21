@@ -1,15 +1,20 @@
 package factory.GUI;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
+import factory.infrastructure.FactoryManager;
 
 public class MenuPanel extends JPanel {
     private JSlider sliderM;
     private JSlider sliderB;
     private JSlider sliderA;
     private JPanel sliderPanel = new JPanel();
+    private FactoryManager factoryManager;
 
-    public MenuPanel() {
+    public MenuPanel(FactoryManager factoryManager) {
+        this.factoryManager = factoryManager;
         sliderPanel.setLayout(new BoxLayout(sliderPanel, BoxLayout.Y_AXIS));
         setLayout(new BorderLayout());
 
@@ -28,6 +33,24 @@ public class MenuPanel extends JPanel {
         sliderB.setBackground(Color.WHITE);
         sliderA.setBackground(Color.WHITE);
 
+        sliderM.addChangeListener(e -> {
+            if (!sliderM.getValueIsAdjusting()) {
+                factoryManager.changeMotorSuppsDelay(sliderM.getValue());
+            }
+        });
+
+        sliderB.addChangeListener(e -> {
+            if (!sliderB.getValueIsAdjusting()) {
+                factoryManager.changeBodySuppsDelay(sliderB.getValue());
+            }
+        });
+
+        sliderA.addChangeListener(e -> {
+            if (!sliderA.getValueIsAdjusting()) {
+                factoryManager.changeAccessorySuppsDelay(sliderA.getValue());
+            }
+        });
+
         sliderPanel.add(labelM);
         sliderPanel.add(sliderM);
         sliderPanel.add(labelB);
@@ -36,11 +59,6 @@ public class MenuPanel extends JPanel {
         sliderPanel.add(sliderA);
 
         this.add(sliderPanel, BorderLayout.WEST);
-
-        // Добавление слушателей
-        sliderM.addChangeListener(new SliderListener("SuppM delay"));
-        sliderB.addChangeListener(new SliderListener("SuppB delay"));
-        sliderA.addChangeListener(new SliderListener("SuppsA delay"));
     }
 
     private JSlider createMinimalSlider() {
@@ -51,17 +69,5 @@ public class MenuPanel extends JPanel {
         slider.setPaintLabels(false);
         slider.setOpaque(false);
         return slider;
-    }
-
-    public JSlider getSliderM() {
-        return sliderM;
-    }
-
-    public JSlider getSliderB() {
-        return sliderB;
-    }
-
-    public JSlider getSliderA() {
-        return sliderA;
     }
 }

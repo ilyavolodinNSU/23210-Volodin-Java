@@ -2,6 +2,8 @@ package factory.GUI;
 
 import javax.swing.*;
 import java.awt.*;
+
+import factory.infrastructure.FactoryManager;
 import factory.infrastructure.FactoryStateData;
 
 public class MainFrame {
@@ -17,7 +19,7 @@ public class MainFrame {
     private final DataBasePanel storageAPanel;
     private final DataBasePanel storageCPanel;
 
-    public MainFrame() {
+    public MainFrame(FactoryManager factoryManager) {
         frame = new JFrame("Фабрика");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(900, 700);
@@ -28,7 +30,7 @@ public class MainFrame {
         mainPanel.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
         mainPanel.setBackground(Color.WHITE);
 
-        JPanel menuPanel = new MenuPanel();
+        JPanel menuPanel = new MenuPanel(factoryManager);
         // menuPanel.setPreferredSize(new Dimension(200, 600));
 
         JPanel factoryPanel = new JPanel(new GridBagLayout());

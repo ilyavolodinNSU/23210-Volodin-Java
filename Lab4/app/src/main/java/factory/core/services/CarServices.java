@@ -29,6 +29,10 @@ public class CarServices {
     }
 
     public void saleCar(Car car) {
+        car.setBody(null);
+        car.setMotor(null);
+        car.setAccessory(null);
+        car.setId(0);
         car = null;
     }
 }
