@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Run Java with Args",
+        "type": "java",
+        "request": "launch",
+        "mainClass": "lab1.App",
+        "args": ["${workspaceFolder}/app/src/main/resources/input2.txt"]
+      }
+    ]
+  }
+  
