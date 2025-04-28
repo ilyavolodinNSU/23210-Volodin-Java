@@ -34,7 +34,6 @@ public class GameLogic {
 
         while (MatOper.collisionMatrix(field.getMatrix(), position) == false) {
             MatOper.shiftMatrix(position, 0, 1);
-            //System.err.println("shift " + Arrays.deepToString(position) + "\n");
         }
 
         System.err.println("final " + Arrays.deepToString(position) + "\n");
