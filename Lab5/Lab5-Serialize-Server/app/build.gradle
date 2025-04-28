@@ -16,6 +16,12 @@ dependencies {
     // Use JUnit Jupiter for testing.
     testImplementation libs.junit.jupiter
 
+    // Mockito
+    testImplementation 'org.mockito:mockito-core:5.10.0'
+
+    // Mockito для мокания static/final методов
+    testImplementation 'org.mockito:mockito-inline:5.2.0'
+
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     // This dependency is used by the application.

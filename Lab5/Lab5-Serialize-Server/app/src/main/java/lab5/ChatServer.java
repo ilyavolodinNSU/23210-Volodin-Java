@@ -23,13 +23,19 @@ public class ChatServer {
         this.loggingEnabled = loggingEnabled;
         try {
             this.serverSocket = new ServerSocket(port);
-            // очистка файла логирования
-            //new FileWriter("Lab5-Serialize-Server\\app\\src\\main\\resources\\serverlog.txt", false).close();
             log("Server started on port: " + port);
         } catch (IOException e) {
             log("Error starting server: " + e.getMessage());
             System.exit(0);
         }
+    }
+
+    public int getActiveClients() {
+        return this.activeClients;
+    }
+
+    public void setActiveClients(int activeClients) {
+        this.activeClients = activeClients;
     }
 
     public void start() {
@@ -62,7 +68,6 @@ public class ChatServer {
             properties.load(input);
             return Integer.parseInt(properties.getProperty("server.port", "1234"));
         } catch (IOException e) {
-            // System.out.println("Error loading config, using default port 1234");
             log("Error loading config, using default port 1234");
             return 1234;
         }
